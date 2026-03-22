@@ -12,3 +12,4 @@ class Expense(Base):
     group_id = Column(Integer, ForeignKey("groups.id"), nullable=False)
 
     group = relationship("Group", back_populates="expenses")
+    splits = relationship("Split", back_populates="expense")

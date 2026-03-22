@@ -10,3 +10,5 @@ class Split(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     amount_owed = Column(Float, nullable=False)
     is_settled = Column(Boolean, default=False)
+
+    expense = relationship("Expense", back_populates="splits")
