@@ -7,11 +7,8 @@ const API = 'http://localhost:8000'
 function Dashboard() {
   const [groups, setGroups] = useState([])
   const [newGroup, setNewGroup] = useState('')
-  const [selectedGroup, setSelectedGroup] = useState(null)
-  const [balances, setBalances] = useState([])
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
-
   const headers = { Authorization: `Bearer ${token}` }
 
   useEffect(() => {
@@ -29,12 +26,6 @@ function Dashboard() {
     await axios.post(`${API}/api/groups/`, { name: newGroup }, { headers })
     setNewGroup('')
     fetchGroups()
-  }
-
-  const fetchBalances = async (groupId) => {
-    setSelectedGroup(groupId)
-    const res = await axios.get(`${API}/api/balances/${groupId}`, { headers })
-    setBalances(res.data)
   }
 
   const logout = () => {
@@ -58,19 +49,9 @@ function Dashboard() {
       {groups.map(group => (
         <div key={group.id} style={{ border: '1px solid #ccc', padding: 10, marginBottom: 10, borderRadius: 4 }}>
           <strong>{group.name}</strong>
-          <button onClick={() => fetchBalances(group.id)} style={{ marginLeft: 10 }}>View Balances</button>
+          <button onClick={() => navigate(`/groups/${group.id}`)} style={{ marginLeft: 10 }}>View Group</button>
         </div>
       ))}
-
-      {selectedGroup && (
-        <div style={{ marginTop: 20 }}>
-          <h3>Balances</h3>
-          {balances.length === 0 && <p>All settled up!</p>}
-          {balances.map((b, i) => (
-            <p key={i}>{b.owes} owes {b.owed_to} <strong>${b.amount}</strong></p>
-          ))}
-        </div>
-      )}
     </div>
   )
 }
