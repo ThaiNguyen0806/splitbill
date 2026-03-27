@@ -18,6 +18,8 @@ function GroupDetail() {
   const [paidBy, setPaidBy] = useState('')
   const [selectedUsers, setSelectedUsers] = useState([])
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [settleError, setSettleError] = useState('')
 
   useEffect(() => {
     if (!token) { navigate('/login'); return }
@@ -27,8 +29,14 @@ function GroupDetail() {
   }, [])
 
   const fetchExpenses = async () => {
-    const res = await axios.get(`${API}/api/expenses/${groupId}`, { headers })
-    setExpenses(res.data)
+    try {
+      const res = await axios.get(`${API}/api/expenses/${groupId}`, { headers })
+      setExpenses(res.data)
+    } catch {
+      navigate('/login')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const fetchBalances = async () => {
@@ -75,19 +83,27 @@ function GroupDetail() {
   }
   
   const settleSplit = async (splitId) => {
-  await axios.put(`${API}/api/splits/settle/${splitId}`, {}, { headers })
-  fetchExpenses()
-  fetchBalances()
+    try {
+      await axios.put(`${API}/api/splits/settle/${splitId}`, {}, { headers })
+      fetchExpenses()
+      fetchBalances()
+    } catch {
+      setSettleError('You can only settle your own splits')
+      setTimeout(() => setSettleError(''), 3000)
+    }
   }
 
   const getUserName = (userId) => {
     const user = users.find(u => u.id === userId)
     return user ? user.name : `User ${userId}`
-}
+  }
+
+  if (loading) return <div style={{ textAlign: 'center', marginTop: 100 }}>Loading...</div>
 
   return (
     <div style={{ maxWidth: 600, margin: '40px auto', padding: 20 }}>
       <button onClick={() => navigate('/dashboard')}>← Back</button>
+      {settleError && <p style={{ color: 'red' }}>{settleError}</p>}
       <h2>Group Expenses</h2>
 
       <div style={{ border: '1px solid #ccc', padding: 15, borderRadius: 4, marginBottom: 20 }}>

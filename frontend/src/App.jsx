@@ -4,17 +4,20 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import GroupDetail from './pages/GroupDetail'
 
-function App() {
+function PrivateRoute({ children }) {
   const token = localStorage.getItem('token')
+  return token ? children : <Navigate to="/login" />
+}
 
+function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={token ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/groups/:groupId" element={<GroupDetail />} />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/groups/:groupId" element={<PrivateRoute><GroupDetail /></PrivateRoute>} />
       </Routes>
     </BrowserRouter>
   )
