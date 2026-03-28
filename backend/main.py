@@ -7,6 +7,7 @@ import backend.models.expense
 import backend.models.split
 from backend.routers import group, user, expense, balance, split
 
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -27,3 +28,4 @@ app.include_router(split.router)
 @app.get("/")
 def root():
     return {"message": "Splitbill API is running"}
+

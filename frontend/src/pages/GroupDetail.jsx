@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useParams, useNavigate } from 'react-router-dom'
 
-const API = 'http://localhost:8000'
+const API = import.meta.env.VITE_API_URL
 
 function GroupDetail() {
   const { groupId } = useParams()
