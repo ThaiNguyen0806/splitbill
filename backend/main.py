@@ -13,7 +13,8 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "https://splitbill-94y8.vercel.app"],
+    allow_origins=["http://localhost:5173", "https://splitbill-94y8.vercel.app", 
+                   "https://splitbill.dev", "https://www.splitbill.dev"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
